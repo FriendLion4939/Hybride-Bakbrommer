@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "config.h"
+#include "debug_uart.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,9 +70,9 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 int main(void)
 {
 
-  /* USER CODE BEGIN 1 */
-
-  /* USER CODE END 1 */
+	/* USER CODE BEGIN 1 */
+	uint32_t heartbeat_count = 0U;
+	/* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -94,7 +95,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   /* USER CODE BEGIN 2 */
-
+  Debug_Init();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -104,9 +105,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
-	    HAL_Delay(2000);
 
+	    HAL_GPIO_TogglePin(LD1_GPIO_Port, LD1_Pin);
+	    Debug_Printf("Heartbeat %lu, tick %lu ms\r\n",
+	                 (unsigned long)heartbeat_count,
+	                 (unsigned long)HAL_GetTick());
+	    heartbeat_count++;
+	    HAL_Delay(HEARTBEAT_PERIOD_MS);
+	    /* USER CODE END 3 */
   }
   /* USER CODE END 3 */
 }
