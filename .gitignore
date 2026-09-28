@@ -24,3 +24,4 @@ Thumbs.db
 .vscode/
 *.bak
 *.tmp
+docs/check-logs/
