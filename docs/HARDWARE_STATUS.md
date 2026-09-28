@@ -7,14 +7,12 @@ or in docs/test-log/.
 Status values: NOT TESTED / IN PROGRESS / VERIFIED / FAILED (add why)
 
 ## Toolchain and basics
-| CubeIDE project builds and flashes (blink LED) on G474RE | VERIFIED | 2026-09-28 | G474RE, PA5 (LD2) | Label LD2 must be set by hand in .ioc (BSP names differ) |
-| Same project type on F446ZE | VERIFIED | 2026-09-28 | F446ZE, PB0 (LD1) | Blink works, same workflow as G474RE;
-
 | Test | Status | Date | Board / pins | Notes |
 |---|---|---|---|---|
-| CubeIDE project builds and flashes (blink LED) on G474RE | NOT TESTED | | | |
-| UART debug print to PC terminal | NOT TESTED | | | |
-| Same project type on F446ZE | NOT TESTED | | | |
+| CubeIDE project builds and flashes (blink LED) on G474RE (BAS01) | VERIFIED | 2026-09-28 | G474RE, PA5 (LD2) | Label LD2 must be set by hand in .ioc (BSP names differ) |
+| Same project type on F446ZE (BAS01) | VERIFIED | 2026-09-28 | F446ZE, PB0 (LD1) | Blink works, same workflow as G474RE |
+| UART debug print to PC terminal on G474RE (BAS02) | VERIFIED | 2026-09-28 | G474RE, PA2/PA3 (USART2, ST-LINK VCP) | 115200 8N1. Module debug_uart.c/.h. BSP COM must stay off (double UART init froze the program). No %f. |
+| UART debug print to PC terminal on F446ZE (BAS02b) | VERIFIED | 2026-09-28 | F446ZE, PD8/PD9 (USART3, ST-LINK VCP) | Same module, handle name in config.h. An old blink HAL_Delay in the loop gave a 3 s interval; keep only one HAL_Delay. |
 
 ## CAN
 | Test | Status | Date | Board / pins | Notes |
@@ -47,7 +45,9 @@ Status values: NOT TESTED / IN PROGRESS / VERIFIED / FAILED (add why)
 ## Decisions made
 (Write short lines, for example: "2026-10-05: CAN baud rate 250 kbit/s on all nodes.")
 
--
+- 2026-09-28: Debug UART is USART2 (PA2/PA3) on the G474RE and USART3 (PD8/PD9) on the F446ZE. Both 115200 8N1 through Debug_Printf() from debug_uart.c/.h.
+- 2026-09-28: Nucleo BSP COM (BSP_COM_Init) stays off. It initialised the same UART a second time and froze the program in Error_Handler.
+- 2026-09-28: The UART handle name for the debug module is set in config.h (DEBUG_UART_HANDLE), so debug_uart.c/.h stay identical on every board.
 
 ---
 
