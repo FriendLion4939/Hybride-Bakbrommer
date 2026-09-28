@@ -7,6 +7,9 @@ or in docs/test-log/.
 Status values: NOT TESTED / IN PROGRESS / VERIFIED / FAILED (add why)
 
 ## Toolchain and basics
+| CubeIDE project builds and flashes (blink LED) on G474RE | VERIFIED | 2026-09-28 | G474RE, PA5 (LD2) | Label LD2 must be set by hand in .ioc (BSP names differ) |
+| Same project type on F446ZE | VERIFIED | 2026-09-28 | F446ZE, PB0 (LD1) | Blink works, same workflow as G474RE;
+
 | Test | Status | Date | Board / pins | Notes |
 |---|---|---|---|---|
 | CubeIDE project builds and flashes (blink LED) on G474RE | NOT TESTED | | | |
