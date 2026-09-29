@@ -61,8 +61,14 @@ vehicle or to high voltage yet. Bench tests use USB or low voltage only.
 - 2,4-inch TFT-scherm met EC11 roterende encoder Combinatiemodule SPI-interface LCD-scherm includes potentiometer en knop
 - M10 1,00 mm 1,25 mm hydraulische remlichtschakelaar  (geen Barsensor  puur schakelend door hydcaulishe druk)
 - LM393P LM393N LM393 DIP-8 voor RPM vanuit pickup omschakeling
-- SOCO 6043B battery packs. Planned test: read their CAN data on the PC.
-  Protocol reference: GitHub stprograms/SuperSoco485Monitor
+- SOCO 6043B battery packs. The BMS talks RS485 (CAN ruled out by an
+  earlier test). Comm wires: black = GND, red and green = RS485 (idle
+  about 2.7 V / 2.6 V to black), grey = wake? (measured 0 V; pack also
+  wakes with its button). Protocol reference: GitHub
+  stprograms/SuperSoco485Monitor
+- MAX14840PMB1 (Maxim/ADI) RS485 Pmod board, 3.3 V, NOT isolated.
+  J1: 1 RO, 2 RE (active low), 3 DE, 4 DI, 5 GND, 6 VCC. J2: A, B.
+  JP1 = 120 ohm termination (default open).
 
 ## Architecture principles (do not break these)
 - The G4 control node is safety-critical: deterministic timing, fixed-period
@@ -101,8 +107,34 @@ moet nog toegevoegd
 - Pin assignments and clock settings are decisions. Do not change them
   without telling me, and update docs/HARDWARE_STATUS.md when they change.
 
+## Delivering code: always say exactly where it goes
+Every time you give me code, state all of this explicitly. Never assume I
+know where something belongs.
+- The project folder, as a full path from the repo root, e.g.
+  `tests/F446ZE/BAT01_soco-rs485/BAT01_soco-rs485/`, and the CubeIDE
+  project name. For a new project: the New Project wizard settings
+  (board, project name, location).
+- A table of files with, per file: COPY (new file or replace) or EDIT, and
+  the exact target path (`Core/Inc/...` or `Core/Src/...`).
+- For generated files (`main.c`, `stm32xxxx_it.c`, ...): the exact name of
+  the `USER CODE BEGIN` block, with the BEGIN/END marker lines shown around
+  the code to paste. One block at a time.
+- Files that are notes or paste-snippets and must NOT be added to the
+  project are marked as such.
+- What NOT to touch.
+- The .ioc: say whether it needs changes. If yes, every change is made in
+  the CubeMX GUI (never by hand in the .ioc file), listed step by step,
+  ending with save + Generate Code. If no, say "no .ioc changes".
+- How to deploy: Refresh, Build, Run/flash, which board and USB port, the
+  terminal settings, and the exact output I should see.
+- Where you prepared the files (for example a shared project folder), and
+  whether anything was committed or pushed to the repo.
+
 ## Workflow: how tests become final code
 1. One small test at a time, on a Nucleo, in its own folder or git branch.
+   Folder pattern: `tests/<BOARD>/<ID>_<name>/<ID>_<name>/` (for example
+   `tests/F446ZE/BAS01_blink/BAS01_blink/`). IDs: BAS = basics, CAN = CAN,
+   UI = screens/SD, BAT = battery/BMS.
 2. When a test works, promote the code into a reusable module. Do not leave
    it as throwaway code in main.c.
 3. Then update docs/HARDWARE_STATUS.md: status, date, board, pins, CubeMX
